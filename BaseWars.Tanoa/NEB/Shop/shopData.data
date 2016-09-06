@@ -2,3 +2,4 @@
 #include "UI\functions\shops\weapon\weaponData.data"
 #include "UI\functions\shops\attach\attachData.data"
 #include "UI\functions\shops\gear\gearData.data"
+#include "UI\functions\shops\sell\sellData.data"

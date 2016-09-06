@@ -6,7 +6,7 @@ params[ "_className", "_cost" ];
 [ _cost ] call NEB_fnc_core_pay;
 
 //Get Crate
-_crate = [ "CRATE", "GET" ] call NEB_fnc_shop;
+_crate = [ "GET" ] call NEB_fnc_shopCrate;
 
 //Get current weapon
 _currentWeapon = [ primaryWeapon player, secondaryWeapon player, handgunWeapon player ] select NEB_currentButton;
@@ -32,14 +32,8 @@ if !( _currentWeapon isEqualTo "" ) then {
 	
 	//Add current weapon base type( we are going to add attachments seperately ) to crate
 	_crate addWeaponCargo [ [ _currentWeapon ] call BIS_fnc_baseWeapon, 1 ];
+	[ "SHOW" ] call NEB_fnc_shopCrate;
 	
-	//Add attachments to crate			
-	{
-		if !( _x isEqualTo "" ) then {
-			_crate addItemCargo [ _x, 1 ];
-		};
-	}forEach _currentAttach;
-						
 	{
 		_x params[ "_mag", "_ammo" ];
 		//Add identical magazine to crate including ammo count
@@ -61,6 +55,7 @@ _fnc_addmags = {
 		}else{
 			//else add it to crate
 			_crate addMagazineCargo [ _mag, 1 ];
+			[ "SHOW" ] call NEB_fnc_shopCrate;
 		};
 		
 	};
@@ -100,16 +95,34 @@ if ( NEB_currentButton isEqualTo 0 && { count getArray( _cfg >> "muzzles" ) > 1 
 	_secMuzzleMag = getArray( _cfg >> _secMuzzle >> "magazines" ) select _secIndex;
 	//Add mags
 	[ _secMuzzleMag, _secCount ] call _fnc_addmags;
+	
+	//Whats this for???
 	player setVariable ["lastPrimary",_className];
 };
 
 //Add new weapon to player
 player addWeapon _className;
 
+_newAttachments = [ primaryWeaponItems player, secondaryWeaponItems player, handgunItems player ] select NEB_currentButton;
 
+_slotClasses = [ "MuzzleSlot", "PointerSlot", "CowsSlot", "UnderBarrelSlot" ]; //[ silencer, pointer, optic, bipod ]
 
-if ( count( magazineCargo _crate + weaponCargo _crate ) > 0 ) then {
-	[ "CRATE", "OPEN" ] call NEB_fnc_shop;
-}else{
-	closeDialog 1;
-};
+//If the new weapon has no attachment in a slot and the old attach is compat then fit it
+{
+	_oldAttach = _currentAttach select _forEachIndex;
+	if ( _x isEqualTo "" && { _oldAttach != "" } ) then {
+		_slotType = _slotClasses select _forEachIndex;
+		_compatibleAttachments = getArray( configFile >> "CfgWeapons" >> _className >> "WeaponSlotsInfo" >> _slotType >> "compatibleItems" );
+		
+		if ( toLower _oldAttach in ( _compatibleAttachments apply{ toLower _x } ) ) then {
+			player addWeaponItem [ _className, _oldAttach ];
+		}else{
+			_crate addItemCargo [ _oldAttach, 1 ];
+		};
+		
+	}else{
+		_crate addItemCargo [ _oldAttach, 1 ];
+	};
+}forEach _newAttachments;
+
+[ "UPDATE" ] call NEB_fnc_shopCrate;

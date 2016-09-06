@@ -6,7 +6,9 @@ class NEB_Shop
 		file = "NEB\Shop\UI\functions";
 		class shop {};
 		class shopInit {};
+		class shopCrate {};
 	};
+	
 	class ShopTypes
 	{
 		file = "NEB\Shop\UI\functions\shops";
@@ -29,5 +31,12 @@ class NEB_Shop
 	class ShopGear
 	{
 		#include "functions\shops\gear\gearFuncs.hpp"
+	};
+	
+	
+	//Leave at bottom
+	class ShopSell
+	{
+		#include "functions\shops\sell\SellFuncs.hpp"
 	};
 };

@@ -7,6 +7,7 @@ class NEB_Shop
 	idd = NEB_SHOP_IDD;
 	movingEnable = false;
 	enableSimulation = true;
+	onUnload = "[ 'SAVE' ] call NEB_fnc_shopCrate";
 
 	class controlsBackground
 	{
@@ -87,8 +88,8 @@ class NEB_Shop
 			colorBackground2[] = {0.4,0.4,0.4,1};
 			colorBackgroundFocused[] = {0.4,0.4,0.4,1};
 			
-			text = "Cache";
-			action = "[ 'CRATE', 'OPEN' ] call NEB_fnc_shop";
+		text = "Cache";
+			action = "[ 'OPEN' ] call NEB_fnc_shopCrate";
 
 		};
 		class CmbShopType: RscCombo

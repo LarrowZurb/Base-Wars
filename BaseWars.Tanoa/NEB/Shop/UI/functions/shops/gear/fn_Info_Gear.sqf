@@ -20,7 +20,6 @@ switch ( true ) do {
 };
 _dataCfg = missionConfigFile >> format[ "NEB_%1Data", NEB_currentShop ] >> _classname;
 
-
 //Utility Functions
 
 private _fnc_getProtectionStats = {
@@ -77,6 +76,7 @@ switch ( NEB_currentButton ) do {
 			getNumber( _cfg >> "ItemInfo" >> "mass" ),
 			[] call _fnc_getContainerLoad,
 			getText( _dataCfg >> "note" )
+			
 		];
 
 	};

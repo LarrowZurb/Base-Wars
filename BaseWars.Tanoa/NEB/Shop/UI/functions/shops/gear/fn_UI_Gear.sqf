@@ -11,3 +11,6 @@ UICTRL( BTN_TWO_IDC ) ctrlSetText "Backpacks";
 UICTRL( BTN_THREE_IDC ) ctrlSetText "Helmets";
 UICTRL( BTN_FOUR_IDC ) ctrlSetText "Glasses";
 UICTRL( BTN_FIVE_IDC ) ctrlSetText "NVGs";
+
+//Change buy to Buy
+UICTRL( BTN_BUY_IDC ) ctrlSetText "Buy";

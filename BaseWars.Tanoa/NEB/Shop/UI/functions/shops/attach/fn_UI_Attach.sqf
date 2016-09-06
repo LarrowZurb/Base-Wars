@@ -9,3 +9,6 @@ UICTRL( BTN_ZERO_IDC ) ctrlSetText "Optic";
 UICTRL( BTN_ONE_IDC ) ctrlSetText "Pointer";
 UICTRL( BTN_TWO_IDC ) ctrlSetText "Bipod";
 UICTRL( BTN_THREE_IDC ) ctrlSetText "Silencer";
+
+//Change buy to Buy
+UICTRL( BTN_BUY_IDC ) ctrlSetText "Buy";

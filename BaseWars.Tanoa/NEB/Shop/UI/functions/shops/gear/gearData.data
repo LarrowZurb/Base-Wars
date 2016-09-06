@@ -318,6 +318,31 @@ class NEB_gearData
 		note = "These Protect Your Eyes From Dirt" 
 	};
 	
+	class B_AssaultPack_khk 
+	{ 
+		cost = 50; 
+		level = 1; 
+	};
+	class B_AssaultPack_dgtl : B_AssaultPack_khk {};
+	class B_AssaultPack_rgr : B_AssaultPack_khk {};
+	class B_AssaultPack_sgg : B_AssaultPack_khk {};
+	class B_AssaultPack_blk : B_AssaultPack_khk {};
+	class B_AssaultPack_cbr : B_AssaultPack_khk {};
+	class B_AssaultPack_mcamo : B_AssaultPack_khk {};
+	class B_AssaultPack_ocamo : B_AssaultPack_khk {};
+	class B_AssaultPack_tna_F : B_AssaultPack_khk {};
+	
+	class NVGoggles 
+	{ 
+		cost = 200; 
+		level = 1; 
+	};
+	class NVGoggles_OPFOR : NVGoggles {};
+	class NVGoggles_INDEP : NVGoggles {};
+	class O_NVGoggles_hex_F : NVGoggles {};
+	class O_NVGoggles_urb_F : NVGoggles {};
+	class O_NVGoggles_ghex_F : NVGoggles {};
+	class NVGoggles_tna_F : NVGoggles {};
 	
 //****
 //LVL5
@@ -381,7 +406,28 @@ class NEB_gearData
 	class U_I_C_Soldier_Para_3_F : U_B_HeliPilotCoveralls {};
 	class U_I_C_Soldier_Para_4_F : U_B_HeliPilotCoveralls {};
 	class U_I_C_Soldier_Para_5_F : U_B_HeliPilotCoveralls {};
-
+	
+	class B_FieldPack_khk 
+	{ 
+		cost = 75; 
+		level = 5; 
+	};
+	class B_FieldPack_ocamo : B_FieldPack_khk {};
+	class B_FieldPack_oucamo : B_FieldPack_khk {};
+	class B_FieldPack_cbr : B_FieldPack_khk {};
+	class B_FieldPack_blk : B_FieldPack_khk {};
+	class B_FieldPack_oli : B_FieldPack_khk {};
+	class B_FieldPack_ghex_F : B_FieldPack_khk {};
+	
+	class B_TacticalPack_rgr 
+	{ 
+		cost = 100; 
+		level = 5; 
+	};
+	class B_TacticalPack_mcamo : B_TacticalPack_rgr {};
+	class B_TacticalPack_ocamo : B_TacticalPack_rgr {};
+	class B_TacticalPack_blk : B_TacticalPack_rgr {};
+	class B_TacticalPack_oli : B_TacticalPack_rgr {};
 	
 //****
 //LVL10
@@ -418,6 +464,15 @@ class NEB_gearData
 	};
 	class U_O_Wetsuit : U_B_Wetsuit {};
 	class U_I_Wetsuit : U_B_Wetsuit {};
+	
+	class B_Kitbag_rgr 
+	{ 
+		cost = 120; 
+		level = 10; 
+	};
+	class B_Kitbag_mcamo : B_Kitbag_rgr {};
+	class B_Kitbag_sgg : B_Kitbag_rgr {};
+	class B_Kitbag_cbr : B_Kitbag_rgr {};
 	
 //****
 //LVL15
@@ -521,6 +576,19 @@ class NEB_gearData
 	class U_B_T_FullGhillie_tna_F : U_B_GhillieSuit {};
 	class U_O_T_Sniper_F : U_B_GhillieSuit {};
 	class U_O_T_FullGhillie_tna_F : U_B_GhillieSuit {};
+	
+	class B_Carryall_ocamo 
+	{ 
+		cost = 150; 
+		level = 20; 
+	};
+	class B_Carryall_oucamo : B_Carryall_ocamo {};
+	class B_Carryall_mcamo : B_Carryall_ocamo {};
+	class B_Carryall_khk : B_Carryall_ocamo {};
+	class B_Carryall_cbr : B_Carryall_ocamo {};
+	class B_Carryall_oli : B_Carryall_ocamo {};
+	class B_Carryall_ghex_F : B_Carryall_ocamo {};
+	
 //****
 //LVL25
 //****
@@ -554,6 +622,16 @@ class NEB_gearData
 		cost = 100; 
 		level = 30; 
 	};
+	
+	class B_ViperLightHarness_blk_F 
+	{ 
+		cost = 175; 
+		level = 30; 
+	};
+	class B_ViperLightHarness_ghex_F : B_ViperLightHarness_blk_F {};
+	class B_ViperLightHarness_hex_F : B_ViperLightHarness_blk_F {};
+	class B_ViperLightHarness_khk_F : B_ViperLightHarness_blk_F {};
+	class B_ViperLightHarness_oli_F : B_ViperLightHarness_blk_F {};
 	
 //****
 //LVL35
@@ -605,6 +683,17 @@ class NEB_gearData
 		level = 40; 
 		note = "This Item Gives You An Sprint Ability Lvl 3"
 	};
+	
+	class B_ViperHarness_blk_F 
+	{ 
+		cost = 200; 
+		level = 40; 
+	};
+	class B_ViperHarness_ghex_F : B_ViperHarness_blk_F {};
+	class B_ViperHarness_hex_F : B_ViperHarness_blk_F {};
+	class B_ViperHarness_khk_F : B_ViperHarness_blk_F {};
+	class B_ViperHarness_oli_F : B_ViperHarness_blk_F {};
+	
 //*****
 //LVL45
 //*****
@@ -638,6 +727,24 @@ class NEB_gearData
 		cost = 150; 
 		level = 50; 
 	};
+	class B_Bergen_mcamo_F 
+	{ 
+		cost = 250; 
+		level = 50; 
+	};
+	class B_Bergen_dgtl_F : B_Bergen_mcamo_F {};
+	class B_Bergen_hex_F : B_Bergen_mcamo_F {};
+	class B_Bergen_tna_F : B_Bergen_mcamo_F {};
+	
+	class NVGogglesB_blk_F 
+	{ 
+		cost = 2000; 
+		level = 50; 
+	};
+	class NVGogglesB_grn_F : NVGogglesB_blk_F {};
+	class NVGogglesB_gry_F : NVGogglesB_blk_F {};
+	
+	
 //*****
 //LVL60
 //*****	
@@ -676,539 +783,16 @@ class NEB_gearData
 	class U_C_Driver_1_red : U_C_Poor_1 {};
 	class U_C_Driver_1_yellow : U_C_Poor_1 {};
 	class U_C_Driver_1_orange : U_C_Poor_1 {};
+	class B_AssaultPack_Kerry : U_C_Poor_1 {};
 	
-	
-	//GLASSES
-	
-	
-	
-	
-
-	//BACKPACKS
-	class B_AssaultPack_khk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_dgtl 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_rgr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_sgg 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_blk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_cbr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_mcamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_ocamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Kitbag_rgr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Kitbag_mcamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Kitbag_sgg 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Kitbag_cbr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_TacticalPack_rgr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_TacticalPack_mcamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_TacticalPack_ocamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_TacticalPack_blk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_TacticalPack_oli 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_khk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_ocamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_oucamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_cbr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_blk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_ocamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_oucamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_mcamo 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_khk 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_cbr 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Parachute 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_oli 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_oli 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_Kerry 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Respawn_TentDome_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Respawn_TentA_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Respawn_Sleeping_bag_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Respawn_Sleeping_bag_blue_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Respawn_Sleeping_bag_brown_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_HMG_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_HMG_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_HMG_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_HMG_01_support_high_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_HMG_01_support_high_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_HMG_01_support_high_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_HMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_HMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_HMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_HMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_HMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_HMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_GMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_GMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_GMG_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_GMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_GMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_GMG_01_A_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_HMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_HMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_HMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_GMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_GMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_GMG_01_high_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Mortar_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_Mortar_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_Mortar_01_support_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Mortar_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_Mortar_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_Mortar_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AA_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_AA_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_AA_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AT_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_AT_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_AT_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Static_Designator_01_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_Static_Designator_02_weapon_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_UAV_01_backpack_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_UAV_01_backpack_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class I_UAV_01_backpack_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Bergen_mcamo_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Bergen_dgtl_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Bergen_hex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Bergen_tna_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_AssaultPack_tna_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_Carryall_ghex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_FieldPack_ghex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperHarness_blk_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperHarness_ghex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperHarness_hex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperHarness_khk_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperHarness_oli_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperLightHarness_blk_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperLightHarness_ghex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperLightHarness_hex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperLightHarness_khk_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class B_ViperLightHarness_oli_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	
-	
-	//NVGs
-	class NVGoggles 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGoggles_OPFOR 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGoggles_INDEP 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_NVGoggles_hex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_NVGoggles_urb_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class O_NVGoggles_ghex_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGoggles_tna_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGogglesB_blk_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGogglesB_grn_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-	class NVGogglesB_gry_F 
-	{ 
-		cost = 0; 
-		level = 0; 
-	};
-
+	class B_Static_Designator_01_weapon_F : U_C_Poor_1 
+	{
+		cost = 5000
+	};
+	class O_Static_Designator_02_weapon_F : B_Static_Designator_01_weapon_F {};
+	class B_UAV_01_backpack_F : B_Static_Designator_01_weapon_F {};
+	class O_UAV_01_backpack_F : B_Static_Designator_01_weapon_F {};
+	class I_UAV_01_backpack_F : B_Static_Designator_01_weapon_F {};
 	
 
 

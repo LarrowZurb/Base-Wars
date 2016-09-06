@@ -48,6 +48,7 @@ if ( count getArray( _cfg >> "muzzles" ) > 1 ) then {
 
 UICTRL( STXT_INFO_IDC ) ctrlSetStructuredText parseText format [
 	"<t align='center'>%1</t><br/>
+	<t align='center' size='6' ><img image=%6 /></t><br/>
 	<t align='left'>%5</t><br/>
 	<t align='left'>Fire Modes:</t><br/>
 	<t align='center'>%2</t><br/>
@@ -56,10 +57,14 @@ UICTRL( STXT_INFO_IDC ) ctrlSetStructuredText parseText format [
 	%3
 	<t align='left'>%5</t><br/>
 	<t align='left'>%4</t><br/>
-	<t align='left'>%5</t>",
+	<t align='left'>%5</t><br/>
+	",
 	getText( _cfg >> "descriptionShort" ),
 	_fireModes,
 	_suppliedAmmo,			    	
 	getText( configFile >> "CfgWeapons" >> [ _className ] call BIS_fnc_baseWeapon >> "Library" >> "libTextDesc" ),
-	"-------------------------------------------------------------------------------------"
+	"---------------------------------------------------------------------------------",
+	str getText( _cfg >> "Picture")
+	
+	
 ];

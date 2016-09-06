@@ -1,0 +1,8 @@
+class NEB_SellData
+{
+	
+	NEB_shopButtons = 4;
+	NEB_skipBuyCondition = 1; //skip condition for changing buy button level & cost
+	
+	
+};

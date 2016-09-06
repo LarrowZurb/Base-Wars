@@ -8,3 +8,6 @@ UICTRL( PIC_SHOP_IDC ) ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\gear_ca.paa";
 UICTRL( BTN_ZERO_IDC ) ctrlSetText "Primary";
 UICTRL( BTN_ONE_IDC ) ctrlSetText "Secondary";
 UICTRL( BTN_TWO_IDC ) ctrlSetText "HandGun";
+
+//Change buy to Buy
+UICTRL( BTN_BUY_IDC ) ctrlSetText "Buy";

@@ -24,8 +24,8 @@ sleep 1;
 				switch (side player) do {
  
 						case west: {
-						
-						_position = [2938.69,13107.5,400];
+						_posRandom = ["blu_playerSpawnA","blu_playerSpawnB","blu_playerSpawnC","blu_playerSpawnD"] call bis_fnc_selectRandom;
+						_position = getMarkerPos _posRandom vectorAdd [0,0,400];
 						[_position] call neb_fnc_core_setStartingPos;
 						
 						playSound "airplanes";
@@ -34,14 +34,13 @@ sleep 1;
 						};
  
 						case east: {
-						
-						_position = [2695.89,12334.4,400];
+						_posRandom = ["red_playerSpawnA","red_playerSpawnB","red_playerSpawnC","red_playerSpawnD"] call bis_fnc_selectRandom;
+						_position = getMarkerPos _posRandom vectorAdd [0,0,400];
 						[_position] call neb_fnc_core_setStartingPos;
 						playSound "airplanes";
 						
 						
 						};
-						default {_position = [0,0,0];};
  
 				};
 	sleep 1;
@@ -54,29 +53,6 @@ player setVariable [ "experience",    profileNamespace getVariable [ "NEB_PRO_39
 player setVariable [ "kills",        profileNamespace getVariable [ "NEB_PRO_39573_KILLS",    0 ] ];
 player setVariable [ "level",        profileNamespace getVariable [ "NEB_PRO_39573_LEVEL",    1 ] ];
 
-
-//Crate Loading
-_contents = profileNamespace getVariable [ "NEB_telecache", [] ];
-_crate = [ "CRATE", "GET" ] call NEB_fnc_shop;
-{
-    switch ( _forEachIndex ) do {
-        case ( 0 ) : {
-            {
-                _crate addMagazineCargo _x;
-            }forEach _x;
-        };
-        case ( 1 ) : {
-            {
-                _crate addItemCargo _x;
-            }forEach _x;
-        };
-        case ( 2 ) : {
-            {
-                _crate addWeaponCargo _x;
-            }forEach _x;
-        };
-    };
-}forEach _contents;
                 
     
 //Add event to player
@@ -197,7 +173,7 @@ player addEventHandler [ "Killed", {
 			};
 		};
 	}else{
-		[ -250, -100, 1 ] remoteExec [ "fnc_updateStats", _killer ];
+		[ -250, -100] remoteExec [ "fnc_updateStats", _killer ];
 	};
 	
 				};
@@ -305,15 +281,9 @@ fnc_updateStats = {
     (uiNamespace getVariable "UIplayerInfo" displayCtrl UIcash ) ctrlSetText ( format [ "$%1", _cash ] );
     (uiNamespace getVariable "UIplayerInfo" displayCtrl UIkills ) ctrlSetText ( format [ "Kills : %1", _kills ] );
 	
-	/*
-	(uiNamespace getVariable "UIplayerInfo" displayCtrl UIhealthIcon ) ctrlSetStructuredText parseText ( format [
-	"<t align='center' size='2' ><img image=%1 /></t>", 
-	_healthIcon 
-	]);
-	*/
 	
 	[] call fnc_showCashGain;
-	[] call neb_fnc_core_ticketCounter;
+	
 		//flag updatestats as finished
 	statsUpdating = nil;
 };
@@ -324,6 +294,7 @@ _bluProgress = linearConversion [ 0, endScore, bluScore, 0, 1 ];
 _redProgress = linearConversion [ 0, endScore, redScore, 0, 1 ];
 _displayFPS = round diag_fps;
 _playerDamage = (1 - (damage player));
+[] call neb_fnc_core_ticketCounter;
 	(uiNamespace getVariable "UIplayerInfo" displayCtrl UIhealthBar ) progressSetPosition _playerDamage;
 	(uiNamespace getVariable "UIplayerInfo" displayCtrl UIdisplayFPS ) ctrlSetText ( format [ "FPS : %1", _displayFPS ] );
 	(uiNamespace getVariable "UIplayerInfo" displayCtrl UIredScore ) ctrlSetText ( format [ "%1", redScore ] );
@@ -401,7 +372,7 @@ fnc_levelUpRewards = {
 						/*
 						switch (playerSide) do {
 								case west: {
-								execVM "Classes\AI\bluRifleMan.sqf";
+								
 								};
 								case east: {
 								
@@ -419,7 +390,7 @@ fnc_levelUpRewards = {
 						/*
 						switch (playerSide) do {
 								case west: {
-								execVM "Classes\AI\bluRifleMan.sqf";
+								
 								};
 								case east: {
 								
@@ -437,7 +408,7 @@ fnc_levelUpRewards = {
 						/*
 						switch (playerSide) do {
 								case west: {
-								execVM "Classes\AI\bluRifleMan.sqf";
+								
 								};
 								case east: {
 								
@@ -456,52 +427,6 @@ fnc_levelUpRewards = {
 
 
 
-/*
-fnc_endTimer = {
-
-END_TIME = 30; //When mission should end in seconds.
-
-if (isServer) then {
-	[] spawn 
-	{
-                ELAPSED_TIME  = 0;
-		START_TIME = diag_tickTime;
-		while {ELAPSED_TIME < END_TIME} do 
-		{
-			ELAPSED_TIME = diag_tickTime - START_TIME;
-			publicVariable "ELAPSED_TIME";
-			sleep 1;
-		};
-	};
-};
-
-
-if!(isDedicated) then
-{
-	[] spawn 
-	{
-		while{ELAPSED_TIME < END_TIME } do
-		{
-			_time = END_TIME - ELAPSED_TIME;
-			_finish_time_minutes = floor(_time / 60);
-			_finish_time_seconds = floor(_time) - (60 * _finish_time_minutes);
-			if(_finish_time_seconds < 10) then
-			{
-				_finish_time_seconds = format ["0%1", _finish_time_seconds];
-			};
-			if(_finish_time_minutes < 10) then
-			{
-				_finish_time_minutes = format ["0%1", _finish_time_minutes];
-			};
-			_formatted_time = format ["%1:%2", _finish_time_minutes, _finish_time_seconds];
-			
-			hintSilent format ["Time left:\n%1", _formatted_time];
-			sleep 1;
-			};
-		};
-	};
-};
-*/
 
 fnc_addSprintSuitA = {
 player forceAddUniform "U_O_Protagonist_VR";
@@ -778,7 +703,17 @@ NEB_fnc_suitChanged = {
 	}forEach _allAbilities;	
 };
 enableSentences false;
+
+_myLoadout = profileNamespace getVariable ["NEB_PRO_39573_LOADOUT",[]];
+
+if (_myLoadout isEqualto []) then {
 [] call neb_fnc_core_levelRewards;
+}else{
+player setUnitLoadout _myLoadout;
+};
+
+
+
 (_this select 0) enableStamina false;
 [] spawn neb_fnc_core_openChute;
 //Starting UI stats and groups
@@ -803,20 +738,12 @@ NEB_fnc_getPlayerCash = {
 
 
 
+//This will not work like this as this is a server command only
+//So will not update all players, only the host if hosted server
 onPlayerDisconnected {
-	//Crate Saving
-	_crate = player getVariable [ "NEB_shopCrate", objNull ];
-	if !( isNull _crate ) then {
-		profileNamespace setVariable[ "NEB_telecache",
-			[
-				magazineCargo _crate call BIS_fnc_consolidateArray,
-				itemCargo _crate call BIS_fnc_consolidateArray,
-				weaponCargo _crate call BIS_fnc_consolidateArray
-			]
-		];
-	};
+	_loadout = getUnitLoadout player;
+	profileNamespace setVariable ["NEB_PRO_39573_LOADOUT",_loadout];
     saveProfileNamespace;
 };
-
 
 				

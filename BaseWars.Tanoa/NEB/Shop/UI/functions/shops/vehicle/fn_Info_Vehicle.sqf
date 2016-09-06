@@ -21,8 +21,9 @@ _weapons = "";
 if ( _weapons isEqualTo "" ) then { _weapons = "NONE" };
 
 UICTRL( STXT_INFO_IDC ) ctrlSetStructuredText parseText format [
-	"<t align='left'>Weapons:</t><br/>
-	<t align='left'>%1</t><br/>
+	"<t align='center' size='2'>%8</t><br/>
+	<t align='center' size='6'><img image=%7/></t><br/><br/>
+	<t align='left'>Weapons:<t align='right'>%1</t>
 	<t align='left'>%6</t><br/>
 	<t align='left'>Passengers:</t> <t align='right'>%2</t>
 	<t align='left'>%6</t><br/>
@@ -37,5 +38,7 @@ UICTRL( STXT_INFO_IDC ) ctrlSetStructuredText parseText format [
 	getNumber( _cfg >> "maxSpeed"),
 	getNumber( _cfg >> "maximumLoad"),
 	getNumber( _cfg >> "armor"),
-	"-------------------------------------------------------------------------------------"
+	"---------------------------------------------------------------------------------",
+	str getText( _cfg >> "icon"),
+	getText ( _cfg >> "displayName" )
 ];

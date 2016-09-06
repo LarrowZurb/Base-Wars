@@ -91,21 +91,6 @@ neb_fnc_core_teleToTruck = {
 	] call BIS_fnc_holdActionAdd;
 };
 
-//Crate Saving
-neb_fnc_core_crateSave = {
-		
-	_crate = player getVariable [ "NEB_shopCrate", objNull ];
-	if !( isNull _crate ) then {
-		profileNamespace setVariable[ "NEB_telecache",
-			[
-				magazineCargo _crate call BIS_fnc_consolidateArray,
-				itemCargo _crate call BIS_fnc_consolidateArray,
-				weaponCargo _crate call BIS_fnc_consolidateArray
-			]
-		];
-	};
-    saveProfileNamespace;
-};
 
 //End Mission
 neb_fnc_core_ticketCounter = {
@@ -167,12 +152,10 @@ _amountleftEnd = endScore - _almostEnd;
 	
 	if (bluScore >= endScore) then {
 		//Crate Saving
-	[] call neb_fnc_core_crateSave;
 	endMission "END1";
 		};
 	if (redScore >= endScore) then {
 		//Crate Saving
-	[] call neb_fnc_core_crateSave;
 	endMission "END1";
 		};
 
@@ -187,8 +170,9 @@ if (_cash >= _cost) then {
 _balance = _cash - _cost;
 _unit setVariable["cash", _balance, true];
 _paid = true;
+_loadout = getUnitLoadout _unit;
+profileNamespace setVariable ["NEB_PRO_39573_LOADOUT",_loadout];
 [] call fnc_updateStats;
-saveProfileNamespace;
 };
 _paid
 };
@@ -489,6 +473,7 @@ neb_fnc_core_levelRewards = {
 
 
 		case east: {
+				
 				if (_myLvl >=1) then {
 				player forceAddUniform _starterClothes;
 				player addVest "V_Rangemaster_belt";
@@ -808,19 +793,9 @@ while {true} do {
 
 //Diary entry
 neb_fnc_core_instructions = {
-				player createDiaryRecord ["Welcome", ["Welcome to Base Wars!", "Level Up And Buy New Gear From The Shop, Capture The Enemy Coms Tower To Win The Game."]];
+				player createDiaryRecord ["Welcome", ["Welcome to Base Wars!", "Level Up And Buy New Gear From The Shop, Capture The Enemy Coms Tower To Earn Big Points."]];
 };
 
-//Starting Money and Level
-neb_fnc_core_startingStats = {
-				player getVariable ["cash",0];
-				_newCash = [500, 20000] select (player in [blu_command, red_command]);
-				_xpgain = (player getVariable ["experience", 0]) + 100;
-				player setVariable ["cash", _newCash];
-				player setVariable ["experience", _xpgain, true];	
-				[ [], "fnc_updateStats", player ] call BIS_fnc_MP;
-				
-};
 
 //Open Parachute at 100m
 neb_fnc_core_openChute = {
@@ -1025,10 +1000,6 @@ neb_fnc_core_bluVehicleSpawnA = {
 	if (isServer) then {
 			disableSerialization;
 			private["_position","_direction","_nearestTargets","_scanArea"];
-	//Create Marker
-			createMarker ["LSVB1",[2926,13069]];
-			"LSVB1" setMarkerType "Empty";
-			"LSVB1" setMarkerSize [2, 2];
 			while{true} do{
 	//Check if the marker has any cars near it
 			_position = getMarkerPos "LSVB1";
@@ -1064,10 +1035,6 @@ neb_fnc_core_bluVehicleSpawnB = {
 	if (isServer) then {
 			disableSerialization;
 			private["_position","_direction","_nearestTargets","_scanArea"];
-	//Create Marker
-			createMarker ["LSVB2",[3132.202,13601.272]];
-			"LSVB2" setMarkerType "Empty";
-			"LSVB2" setMarkerSize [2, 2];
 			while{true} do{
 	//Check if the marker has any cars near it
 			_position = getMarkerPos "LSVB2";
@@ -1102,10 +1069,6 @@ neb_fnc_core_bluVehicleSpawnC = {
 	if (isServer) then {
 			disableSerialization;
 			private["_position","_direction","_nearestTargets","_scanArea"];
-	//Create Marker
-			createMarker ["LSVB3",[3136.9,13613.6]];
-			"LSVB3" setMarkerType "Empty";
-			"LSVB3" setMarkerSize [2, 2];
 			while{true} do{
 	//Check if the marker has any cars near it
 			_position = getMarkerPos "LSVB3";
@@ -1137,10 +1100,6 @@ neb_fnc_core_bluVehicleSpawnC = {
 
 //BLU SPAWN TRUCK
 neb_fnc_core_bluSpawnTruck = {
-	createMarker ["BluTruckSpawn",[3116.23,13584.7]];
-		"BluTruckSpawn" setMarkerType "Empty";
-		"BluTruckSpawn" setMarkerSize [2, 2];
-
 	while {true} do {
 					
 					_direction = 120;
@@ -1168,7 +1127,8 @@ neb_fnc_core_bluSpawnTruck = {
 					_trigger attachTo [ BluSpawnTruck, [0,0,0] ];
 
 					//Call shopInit on server and all clients and JIP
-					_JIP = [ _trigger, "Blu Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", [ 0, 2 ], true ];
+					_JIP = [ _trigger, "Blu Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", 0, true ];
+					_JIP = [ _trigger, "Blu Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", 2 ];
 					
 					
 					waitUntil {!alive BluSpawnTruck};
@@ -1180,19 +1140,13 @@ neb_fnc_core_bluSpawnTruck = {
 //Quilin 1 spawn
 neb_fnc_core_redVehicleSpawnA = {
 //REDLSV1
-	//Create Marker
-		createMarker ["LSVR1",[2726.971,12315.556]];
-		"LSVR1" setMarkerType "Empty";
-		"LSVR1" setMarkerSize [2, 2];
-		
-	
 		disableSerialization;
 		private["_position","_direction","_nearestTargets","_scanArea"];
 	while{true} do{
 	//Check if the marker has any cars near it
 		_position = getMarkerPos "LSVR1";
 		_scanArea = 5;
-		_direction = -100;
+		_direction = 110;
 		_nearestTargets = nearestObjects[_position,["landVehicle","Air","Ship"],_scanArea] select 0;
 	//if the marker has no cars near it then spawn the new car with nothing in inventory
 	if (!isNil "_nearestTargets") then {
@@ -1218,13 +1172,8 @@ neb_fnc_core_redVehicleSpawnA = {
 
 //Quilin 2 Spawn
 neb_fnc_core_redVehicleSpawnB = {
-//REDLSV2
-	//Create Marker
-		createMarker ["LSVR2",[2129.23,12074.7]];
-		"LSVR2" setMarkerType "Empty";
-		"LSVR2" setMarkerSize [2, 2];
-		
-	
+
+
 		disableSerialization;
 		private["_position","_direction","_nearestTargets","_scanArea"];
 	while{true} do{
@@ -1256,12 +1205,7 @@ neb_fnc_core_redVehicleSpawnB = {
 };
 //Quilin 3 Spawn
 neb_fnc_core_redVehicleSpawnC = {
-//REDLSV3
-		//Create Marker
-		createMarker ["LSVR3",[2144.99,12093.7]];
-		"LSVR3" setMarkerType "Empty";
-		"LSVR3" setMarkerSize [2, 2];
-		
+
 	
 		disableSerialization;
 		private["_position","_direction","_nearestTargets","_scanArea"];
@@ -1295,10 +1239,7 @@ neb_fnc_core_redVehicleSpawnC = {
 
 //RED SPAWN TRUCK
 neb_fnc_core_redSpawnTruck = {
-	createMarker ["RedTruckSpawn",[2147.53,12101.6]];
-		"RedTruckSpawn" setMarkerType "Empty";
-		"RedTruckSpawn" setMarkerSize [2, 2];
-		
+	
 	while {true} do {
 					
 					_direction = 300;
@@ -1325,7 +1266,8 @@ neb_fnc_core_redSpawnTruck = {
 					_trigger attachTo [ RedSpawnTruck, [0,0,0] ];
 
 					//Call shopInit on server and all clients and JIP
-					_JIP = [ _trigger, "Red Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", [ 0, 2 ], true ];
+					[ _trigger, "Red Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", 0, true ];
+					[ _trigger, "Red Mobile FOB", "ALL", true, true ] remoteExec [ "NEB_fnc_shopInit", 2 ];
 					waitUntil {!alive RedSpawnTruck};
 					sleep .5;
 					RedSpawnTruck = nil;
@@ -1336,11 +1278,7 @@ neb_fnc_core_redSpawnTruck = {
 
 //Merc Camp Vehicle
 neb_fnc_core_randomVehicleSpawnA = {
-	//Create Marker
-			createMarker ["LSVM1",[2914.5,12625.5]];
-			"LSVM1" setMarkerType "Empty";
-			"LSVM1" setMarkerSize [2, 2];
-			
+
 	while{true} do{
 		if (isServer) then {
 			disableSerialization;
@@ -1380,11 +1318,7 @@ neb_fnc_core_randomVehicleSpawnA = {
 
 //Jungle 1 Vehicle 1
 neb_fnc_core_randomVehicleSpawnB = {
-	//Create Marker
-			createMarker ["LSVJ1V1",[3425.78,12807.7]];
-			"LSVJ1V1" setMarkerType "Empty";
-			"LSVJ1V1" setMarkerSize [2, 2];
-			
+
 	while{true} do{
 		if (isServer) then {
 			disableSerialization;
@@ -1424,10 +1358,6 @@ neb_fnc_core_randomVehicleSpawnB = {
 
 //Jungle 2 Vehicle 1
 neb_fnc_core_randomVehicleSpawnC = {
-	//Create Marker
-			createMarker ["LSVJ2V1",[2487.66,12914.6]];
-			"LSVJ2V1" setMarkerType "Empty";
-			"LSVJ2V1" setMarkerSize [2, 2];
 			
 	while{true} do{
 		if (isServer) then {
@@ -1467,33 +1397,17 @@ neb_fnc_core_randomVehicleSpawnC = {
 
 //Random Spawn 1
 neb_fnc_core_randomVehicleSpawnD = {
-	//Create Marker
-			createMarker ["RandomVM1",[3699.36,12861.5]];
-			"RandomVM1" setMarkerType "Empty";
-			"RandomVM1" setMarkerSize [2, 2];
-			
-			createMarker ["RandomVM2",[3648.43,13217.7]];
-			"RandomVM2" setMarkerType "Empty";
-			"RandomVM2" setMarkerSize [2, 2];
-			
-			createMarker ["RandomVM3",[3918.43,12822.7]];
-			"RandomVM3" setMarkerType "Empty";
-			"RandomVM3" setMarkerSize [2, 2];
-			
-			createMarker ["RandomVM4",[3859.62,13408.5]];
-			"RandomVM4" setMarkerType "Empty";
-			"RandomVM4" setMarkerSize [2, 2];
-			
+
 	while{true} do{
 		if (isServer) then {
 			disableSerialization;
 			private["_position","_direction","_nearestTargets","_scanArea"];
 	
 	//Check if the marker has any cars near it
-			_positionA = getMarkerPos "RandomVM1";
-			_positionB = getMarkerPos "RandomVM2";
-			_positionC = getMarkerPos "RandomVM3";
-			_positionD = getMarkerPos "RandomVM4";
+			_positionA = getMarkerPos "RandomVMA1";
+			_positionB = getMarkerPos "RandomVMA2";
+			_positionC = getMarkerPos "RandomVMA3";
+			_positionD = getMarkerPos "RandomVMA4";
 			_rPosition = [_positionA, _positionB, _positionC, _positionD] call BIS_fnc_selectRandom;
 			_scanArea = 5;
 			_direction = [60,120,30,90,50,300,210] call BIS_fnc_selectRandom;

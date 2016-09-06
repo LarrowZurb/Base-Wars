@@ -8,3 +8,6 @@ UICTRL( PIC_SHOP_IDC ) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\spac
 UICTRL( BTN_ZERO_IDC ) ctrlSetText "Land";
 UICTRL( BTN_ONE_IDC ) ctrlSetText "Air";
 UICTRL( BTN_TWO_IDC ) ctrlSetText "Sea";
+
+//Change buy to Buy
+UICTRL( BTN_BUY_IDC ) ctrlSetText "Buy";

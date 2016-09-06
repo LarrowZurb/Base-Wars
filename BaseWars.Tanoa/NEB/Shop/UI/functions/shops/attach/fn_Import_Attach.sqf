@@ -8,7 +8,7 @@ params[ "_shopName" ];
 			_index = _forEachIndex;
 		};
 		
-	}forEach [ 201, 301, 302, 101 ]; //These are the vanilla defines 'type' for primary, secondary, handgun for each weapon in CfgWeapons
+	}forEach [ 201, 301, 302, 101 ]; //These are the vanilla defines 'type' for [ optic, pointer, bipod, silencer ]
 	
 	if ( _index > -1 ) then {
 		_data = NEB_shopData select _index;

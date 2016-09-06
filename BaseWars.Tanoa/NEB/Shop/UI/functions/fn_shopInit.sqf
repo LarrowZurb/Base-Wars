@@ -98,7 +98,7 @@ if ( !isDedicated && hasInterface  ) then {
 			format[ "
 				hint 'You have left\n%1 shop';
 				player removeAction ( player getvariable 'NEB_shopAction_%1' );
-				[ 'CRATE', 'HIDE' ] call NEB_fnc_shop;
+				[ 'HIDE' ] call NEB_fnc_shopCrate;
 			", _shopName ]
 		];
 		

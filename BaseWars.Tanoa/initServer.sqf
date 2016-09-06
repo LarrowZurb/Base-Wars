@@ -19,7 +19,7 @@
 
 redScore = 0;
 bluScore = 0;
-endScore = 100;
+endScore = 1000;
 
 publicVariable "redScore";
 publicVariable "bluScore";
@@ -86,3 +86,10 @@ fnc_setEventKilled = {
 };
 
 
+addMissionEventHandler [ "HandleDisconnect", {
+	params[ "_unit", "_id", "_uid", "_name" ];
+	
+	//Remove JIP for crate closing
+	remoteExec [ "", format[ "shopCrate_%1", _uid ] ];
+	
+}];

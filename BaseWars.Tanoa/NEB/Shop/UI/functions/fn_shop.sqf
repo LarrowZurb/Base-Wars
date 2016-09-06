@@ -68,7 +68,7 @@ switch ( toUpper _fnc ) do {
 		{
 			UICTRL( _x ) ctrlShow false;
 		}forEach ( SHOPLAYOUTS - [ _currentLayout ] );
-		
+			
 		//Make sure new layout is visible
 		UICTRL( _currentLayout ) ctrlShow true;
 
@@ -83,6 +83,24 @@ switch ( toUpper _fnc ) do {
 
 		//Update listbox
 		[ "LIST" ] call NEB_fnc_Shop;
+	};
+	
+	//******
+	//Clear data and re-import
+	//******
+	case ( "RESETDATA" ) : {
+		params[ [ "_curIndex", -1 ] ];
+		
+		//Create shop data arrays based on number of butons
+		NEB_shopData = [];
+		NEB_shopData resize NEB_shopButtons;
+		NEB_shopData = NEB_shopData apply{ [] };
+		
+		//Get Data
+		[ NEB_currentShop ] call ( missionNamespace getVariable format[ "NEB_fnc_import_%1", NEB_currentShop ] );
+
+		//Update listbox
+		[ "LIST", _curIndex ] call NEB_fnc_Shop;
 	};
 
 	//******
@@ -107,10 +125,11 @@ switch ( toUpper _fnc ) do {
 	//******
 	case ( "LIST" ) : {
 		private[ "_listbox", "_buyButton", "_data", "_cfg", "_index" ];
+		params[ [ "_curIndex", -1 ] ];
 
 		_listbox = UICTRL( LB_LIST_IDC );
 		_buyButton = UICTRL( BTN_BUY_IDC );
-
+		
 		//Clear info box
 		UICTRL( STXT_INFO_IDC ) ctrlSetStructuredText parseText "<br/><t align='center'> - Make a selection - </t><br/>";
 
@@ -118,7 +137,9 @@ switch ( toUpper _fnc ) do {
 		lbClear _listbox;
 
 		//Set listbox selection to nothing
-		_listbox lbSetCurSel -1;
+		if ( _curIndex isEqualTo -1 ) then {
+			_listbox lbSetCurSel _curIndex;
+		};
 
 		//Disable BUY button
 		_buyButton ctrlEnable false;
@@ -127,36 +148,50 @@ switch ( toUpper _fnc ) do {
 		_data = NEB_shopData select NEB_currentButton;
 
 		//Fill listbox
-		{
-			_x params[ "_className", "_level", "_price" ];
+		if ( !isNil format[ "NEB_fnc_List_%1", NEB_currentShop ] ) then {
+			//If a specialised list fill script is available use that instead.
+			[ _listbox, _buyButton, _data ] call ( missionNamespace getVariable format[ "NEB_fnc_List_%1", NEB_currentShop ] );
+			
+		}else{
+			//Normal list fill for all BUY
+			{
+				_x params[ "_className", "_level", "_price" ];
 
+				_cfg = {
+					if ( isClass ( configFile >> _x >> _className ) ) exitWith {
+						( configFile >> _x >> _className )
+					};
+				}forEach [
+					//This list should be enough to cover most class types
+					"CfgVehicles",
+					"CfgWeapons",
+					"CfgGlasses",
+					"CfgMagazines",
+					"CfgAmmo"
+				];
 
-			_cfg = {
-				if ( isClass ( configFile >> _x >> _className ) ) exitWith {
-					( configFile >> _x >> _className )
+				_index = _listbox lbAdd format[ "%1 - $%2", getText( _cfg >> "displayName" ), _price ];
+				_listbox lbSetPicture [ _index, getText( _cfg >> "picture" ) ];
+				_listbox lbSetData [ _index, str [ _className, _level ] ];
+				_listbox lbSetValue [ _index, _price ];
+
+				//Turn listbox entry red if player is not the correct level
+				if ( call NEB_fnc_getPlayerLevel < _level || call NEB_fnc_getPlayerCash < _price ) then {
+					_listbox lbSetColor [ _index, [ 1, 0, 0, 0.8 ] ];
+					_listbox lbSetSelectColor [ _index, [ 1, 0, 0, 0.8 ] ];
 				};
-			}forEach [
-				//This list should be enough to cover most class types
-				"CfgVehicles",
-				"CfgWeapons",
-				"CfgGlasses",
-				"CfgMagazines",
-				"CfgAmmo"
-			];
+			
+			}forEach _data;
+		};
 
-			_index = _listbox lbAdd format[ "%1 - $%2", getText( _cfg >> "displayName" ), _price ];
-			_listbox lbSetPicture [ _index, getText( _cfg >> "picture" ) ];
-			_listbox lbSetData [ _index, str [ _className, _level ] ];
-			_listbox lbSetValue [ _index, _price ];
-
-			//Turn listbox entry red if player is not the correct level
-			if ( call NEB_fnc_getPlayerLevel < _level || call NEB_fnc_getPlayerCash < _price ) then {
-				_listbox lbSetColor [ _index, [ 1, 0, 0, 0.8 ] ];
-				_listbox lbSetSelectColor [ _index, [ 1, 0, 0, 0.8 ] ];
+		//Set listbox selection passed index
+		if ( _curIndex > -1 ) then {
+			if ( lbSize _listbox <= _curIndex ) then {
+				_curIndex = ( lbSize _listbox ) - 1;
 			};
-
-		}forEach _data;
-
+			_listbox lbSetCurSel _curIndex;
+		};
+		
 	};
 
 	//******
@@ -173,16 +208,19 @@ switch ( toUpper _fnc ) do {
 
 		_buyButton = UICTRL( BTN_BUY_IDC );
 
-		if ( call NEB_fnc_getPlayerLevel < _level || call NEB_fnc_getPlayerCash < _cost ) then {
-			//Change button Text
-			_buyButton ctrlSetText ( [ "Not Enough Money", format[ "Need to be level %1", _level ] ] select ( call NEB_fnc_getPlayerLevel < _level ));
-			//Disable BUY button
-			_buyButton ctrlEnable false;
-		}else{
-			//restore BUY Text
-			_buyButton ctrlSetText "Buy";
-			//Enable BUY button
-			_buyButton ctrlEnable true;
+		if ( getNumber( missionConfigFile >> format[ "NEB_%1Data", NEB_currentShop ] >> "NEB_skipBuyCondition" ) isEqualTo 0 ) then {
+			
+			if ( call NEB_fnc_getPlayerLevel < _level || call NEB_fnc_getPlayerCash < _cost ) then {
+				//Change button Text
+				_buyButton ctrlSetText ( [ "Not Enough Money", format[ "Need to be level %1", _level ] ] select ( call NEB_fnc_getPlayerLevel < _level ));
+				//Disable BUY button
+				_buyButton ctrlEnable false;
+			}else{
+				//restore BUY Text
+				_buyButton ctrlSetText "Buy";
+				//Enable BUY button
+				_buyButton ctrlEnable true;
+			};
 		};
 
 		[ _className ] call ( missionNamespace getVariable format[ "NEB_fnc_Info_%1", NEB_currentShop ] );
@@ -198,85 +236,14 @@ switch ( toUpper _fnc ) do {
 		_listbox = UICTRL( LB_LIST_IDC );
 
 		_index =  lbCurSel _listbox;
+		
 		( call compile ( _listbox lbData _index )) params[ "_className", "_level" ];
 		_cost = _listbox lbValue _index;
-
-		[ _className, _cost ] call ( missionNamespace getVariable format[ "NEB_fnc_Buy_%1", NEB_currentShop ] );
-
-	};
-
-	//******
-	//Create crate/teleport/open/icon
-	//******
-	case ( "CRATE" ) : {
-		params[ "_do", "_this" ];
-
-		switch ( _do ) do {
-
-			case "GET" : {
-				private[ "_crate" ];
-
-				if ( isNull ( player getVariable [ "NEB_shopCrate", objNull ] ) ) then {
-					//Create crate
-					_crate = createVehicle [ "Box_NATO_Ammo_F", player getPos [ 2, getDir player ], [], 0, "CAN_COLLIDE" ];
-					clearItemCargoGlobal _crate;
-					clearMagazineCargoGlobal _crate;
-					clearWeaponCargoGlobal _crate;
-					_crate allowDamage false;
-
-					_crate setObjectTextureGlobal [0,"NEB\Shop\textures\shopCrate_signs_ca.paa"];
-
-					player setVariable [ "NEB_shopCrate", _crate ];
-
-					addMissionEventHandler [ "Draw3D", {
-						_crate = player getVariable "NEB_shopCrate";
-						if !( isObjectHidden _crate ) then {
-							drawIcon3D [
-								"\a3\weapons_f\Ammoboxes\data\ui\map_wpnsbox_f_ca.paa",
-								[1,1,1,1],
-								getPosATLVisual _crate vectorAdd [0,0,1],
-								1,
-								1,
-								0
-							];
-						};
-					}];
-
-				}else{
-					_crate = player getVariable "NEB_shopCrate";
-					if ( _crate distance player > 4 ) then {
-						 _crate setVehiclePosition [ player getPos [ 2, getDir player ], [], 0, "CAN_COLLIDE" ];
-					};
-					if ( isObjectHidden _crate ) then {
-						[ _crate, false ] remoteExec [ "hideObjectGlobal", 2 ];
-					};
-
-				};
-
-				_crate setDir ( getDir player + 90 );
-
-				_crate
-			};
-
-			case "OPEN" : {
-				_crate = player getVariable [ "NEB_shopCrate", objNull ];
-				
-				_crate = [ "CRATE", "GET" ] call NEB_fnc_shop;
-
-				closeDialog 1;
-
-				player action [ "OpenBag", _crate ];
-			};
-
-			case "HIDE" : {
-				_crate = player getVariable [ "NEB_shopCrate", objNull ];
-
-				if !( isNull _crate ) then {
-					[ _crate, true ] remoteExec [ "hideObjectGlobal", 2 ];
-				};
-			};
-
+		
+		if !( isNil "_className" ) then {
+			[ _className, _cost, _level ] call ( missionNamespace getVariable format[ "NEB_fnc_Buy_%1", NEB_currentShop ] );
 		};
 
 	};
+
 };
