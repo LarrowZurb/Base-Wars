@@ -47,6 +47,6 @@ Temporary Items
 .apdisk
 
 # Ultra Edit Project Files
-.pui
-.prj
-.bup
+*.pui
+*.prj
+*.bup
