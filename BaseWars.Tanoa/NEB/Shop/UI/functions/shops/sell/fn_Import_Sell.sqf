@@ -27,7 +27,7 @@ _crateContents params[ "_magazines", "_items", "_weapons", "_backpacks" ];
 					};
 					_nul = _shopData pushBack [ _item, getNumber( _cfg >> _item >> "cost" ) * _sellRatio, _ammo ];
 				}else{
-					//For testing so we know whats missiong in data class
+					//For testing so we know whats missing in data class
 					_nul = _shopData pushBack [ _item, 0, _ammo ];
 				};
 			};

@@ -12,14 +12,14 @@ switch( NEB_currentButton ) do {
 	case ( 0 ) : {
 		if ( uniform player != "" ) then {
 			_allItems = uniformItems player;
-			_crate addItemCargo [ uniform player, 1 ];
+			[ "CACHE", [ "ADD", [ uniform player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 			player forceAddUniform _className;
 			{
 				if ( player canAddItemToUniform _x ) then {
 					uniformContainer player addItemCargoGlobal [ _x, 1 ];
 				}else{
-					_crate addItemCargo [ _x, 1 ];
+					[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
 				};
 			}forEach _allItems;	
 		}else{
@@ -32,14 +32,14 @@ switch( NEB_currentButton ) do {
 	case ( 1 ) : {
 		if ( vest player != "" ) then {
 			_allItems = vestItems player;
-			_crate addItemCargo [ vest player, 1 ];
+			[ "CACHE", [ "ADD", [ vest player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 			player addVest _className;
 			{
 				if ( player canAddItemToVest _x ) then {
 					vestContainer player addItemCargoGlobal [ _x, 1 ];
 				}else{
-					_crate addItemCargo [ _x, 1 ];
+					[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
 				};
 			}forEach _allItems;
 		}else{
@@ -51,14 +51,14 @@ switch( NEB_currentButton ) do {
 	case ( 2 ) : {
 		if ( backpack player != "" ) then {
 			_allItems = backpackItems player;
-			_crate addBackpackCargo [ backpack player, 1 ];
+			[ "CACHE", [ "ADD", [ backpack player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 			player addBackpack _className;
 			{
 				if ( player canAddItemToBackpack _x ) then {
 					backpackContainer player addItemCargoGlobal [ _x, 1 ];
 				}else{
-					_crate addItemCargo [ _x, 1 ];
+					[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
 				};
 			}forEach _allItems;
 		}else{
@@ -70,7 +70,7 @@ switch( NEB_currentButton ) do {
 	//helmets
 	case ( 3 ) : {
 		if ( headgear player != "" ) then {
-			_crate addItemCargo [ headgear player, 1 ];
+			[ "CACHE", [ "ADD", [ headgear player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 		};
 		player addHeadgear _className;
@@ -79,7 +79,7 @@ switch( NEB_currentButton ) do {
 	//Facewear
 	case ( 4 ) : {
 		if ( goggles player != "" ) then {
-			_crate addItemCargo [ goggles player, 1 ];
+			[ "CACHE", [ "ADD", [ goggles player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 		};
 		player addGoggles _className;
@@ -88,7 +88,7 @@ switch( NEB_currentButton ) do {
 	//NVG
 	case ( 5 ) : {
 		if ( hmd player != "" ) then {
-			_crate addItemCargo [ hmd player, 1 ];
+			[ "CACHE", [ "ADD", [ hmd player, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 			player unlinkItem hmd player;
 		};

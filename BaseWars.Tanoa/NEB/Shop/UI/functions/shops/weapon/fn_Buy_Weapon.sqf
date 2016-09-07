@@ -31,13 +31,13 @@ if !( _currentWeapon isEqualTo "" ) then {
 	_currentMags = magazinesAmmoFull player select { _x select 0 in _compatibleMags };
 	
 	//Add current weapon base type( we are going to add attachments seperately ) to crate
-	_crate addWeaponCargo [ [ _currentWeapon ] call BIS_fnc_baseWeapon, 1 ];
+	[ "CACHE", [ "ADD", [ [ _currentWeapon ] call BIS_fnc_baseWeapon, 1 ] ] ] call NEB_fnc_shopCrate;
 	[ "SHOW" ] call NEB_fnc_shopCrate;
 	
 	{
 		_x params[ "_mag", "_ammo" ];
 		//Add identical magazine to crate including ammo count
-		_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+		[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
 		//Remove mag from player
 		player removeMagazine _mag;
 	}forEach _currentMags;
@@ -54,7 +54,7 @@ _fnc_addmags = {
 			player addMagazine _mag;
 		}else{
 			//else add it to crate
-			_crate addMagazineCargo [ _mag, 1 ];
+			[ "CACHE", [ "ADD", [ _mag, 1 ] ] ] call NEB_fnc_shopCrate;
 			[ "SHOW" ] call NEB_fnc_shopCrate;
 		};
 		
@@ -117,11 +117,11 @@ _slotClasses = [ "MuzzleSlot", "PointerSlot", "CowsSlot", "UnderBarrelSlot" ]; /
 		if ( toLower _oldAttach in ( _compatibleAttachments apply{ toLower _x } ) ) then {
 			player addWeaponItem [ _className, _oldAttach ];
 		}else{
-			_crate addItemCargo [ _oldAttach, 1 ];
+			[ "CACHE", [ "ADD", [ _oldAttach, 1 ] ] ] call NEB_fnc_shopCrate;
 		};
 		
 	}else{
-		_crate addItemCargo [ _oldAttach, 1 ];
+		[ "CACHE", [ "ADD", [ _oldAttach, 1 ] ] ] call NEB_fnc_shopCrate;
 	};
 }forEach _newAttachments;
 

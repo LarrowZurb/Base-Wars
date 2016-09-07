@@ -25,13 +25,8 @@ class Header
 
 class RscTitles
 {
-#include "playerInfo.hpp"
-};  
-
-
-
-
-
+	#include "functions\client\ui\playerInfo.hpp"
+};
 
 class CfgFunctions
 {
@@ -41,7 +36,7 @@ class CfgFunctions
 
 class CfgSounds
 {
-	
+
 	// List of sounds (.ogg files without the .ogg extension)
 	sounds[] = {airplanes,electricshock};
 
@@ -58,9 +53,22 @@ class CfgSounds
 		sound[] = {\sound\electricshock.ogg, db-25, 1};
 		titles[] = {0, ""};
 	};
-	
+
 };
 
 
-
+class Params
+{
+	class EndScore
+	{
+		title =	"End Score"; // Param name visible in the list
+		values[] = { 1000, 3000, 5000 }; // Values; must be integers; has to have the same number of elements as 'texts'
+		texts[]	= {	"1000",	"3000",	"5000"}; // Description of each selectable item
+		// Default value; must be listed in 'values' array, otherwise 0 is used
+		// Default values that are not whole numbers do not work. Param will default to 0 (or 1 if defined)
+		default	= 1000;
+		function = "NEB_fnc_startScores"; //Function is called when a machine connects inculding JIP, selected value is passed as an argument
+		isGlobal = 0; //1 is called when anyone connects server or client (server only connects at initial mission start)/ 0 only called on the server (server only connects at initial mission start)
+	};
+};
 

@@ -18,12 +18,12 @@ _currentAttachments = player weaponAccessories currentWeapon player;
 if ( toLower _classname in ( _compatibleAttachments apply{ toLower _x } ) ) then {
 	_toReplace = _currentAttachments select _slotIndex;
 	if ( _toReplace != "" ) then {
-		_crate addItemCargo [ _toReplace, 1 ];
+		[ "CACHE", [ "ADD", [ _toReplace, 1 ] ] ] call NEB_fnc_shopCrate;
 		[ "SHOW" ] call NEB_fnc_shopCrate;
 	};
 	player addWeaponItem [ currentWeapon player, _classname ];
 }else{
-	_crate addItemCargo [ _className, 1 ];
+	[ "CACHE", [ "ADD", [ _className, 1 ] ] ] call NEB_fnc_shopCrate;
 	[ "SHOW" ] call NEB_fnc_shopCrate;
 };
 

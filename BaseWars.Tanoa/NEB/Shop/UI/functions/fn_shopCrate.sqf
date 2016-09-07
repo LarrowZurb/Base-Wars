@@ -321,6 +321,100 @@ switch ( _do ) do {
 		
 	};
 	
+	//********
+	//Add/Remove crate inventory
+	//********
+	case "CACHE" : {
+		params[ "_fnc", "_itemInfo" ];
+		_itemInfo params[ "_className", "_count", "_ammo" ];
+		
+		switch ( toUpper _fnc ) do {
+			
+			case "ADD" : {
+				_crate = [ "GET" ] call NEB_fnc_shopCrate;
+				_itemType = _className call BIS_fnc_itemType;
+		
+				switch ( toUpper( _itemType select 0 ) ) do {
+					case "MINE";
+					case "MAGAZINE" : {
+						if ( _ammo isEqualTo -1 ) then {
+							_ammo = getNumber( configFile >> "CfgMagazines" >> _className >> "count" );
+						};
+						_crate addMagazineAmmoCargo [ _className, _count, _ammo ];
+					};
+					case "WEAPON" : {
+						_crate addWeaponCargo [ _className, _count ];
+					};
+					case "ITEM" : {
+						_crate addItemCargo [ _className, _count ];
+					};
+					case "EQUIPMENT" : {
+						if ( toUpper( _itemType select 1 ) isEqualTo "BACKPACK" ) then {
+							_crate addBackpackCargo [ _className, _count ];
+						}else{
+							_crate addItemCargo [ _className, _count ];
+						};
+					};
+				};
+				
+				[ "CACHE", [ "ADD", [ _item, _count ] ] ] call NEB_fnc_showMessage;
+				
+			};
+			
+			case "REM" : {
+								
+				_crateContents = [ "CARGO", "ALL" ] call NEB_fnc_shopCrate;
+
+				_itemType = _className call BIS_fnc_itemType;
+
+				for "_i" from 1 to _count do {
+					switch ( toUpper( _itemType select 0 ) ) do {
+						case "MINE";
+						case "MAGAZINE" : {
+							_contents = _crateContents select 0;
+							{
+								_x params[ "_mag", "_ammoCount" ];
+								
+								if ( _mag == _className && _ammoCount isEqualTo _ammo ) exitWith {
+									_contents set [ _forEachIndex, objNull ];
+								};
+							}forEach _contents;
+							_contents = _contents - [ objNull ];
+							_crateContents set [ 0, _contents ];
+						};
+						case "WEAPON";
+						case "ITEM";
+						case "EQUIPMENT" : {
+							_contents = _crateContents select [ 1, 3 ];
+							{
+								_contentType = _x;
+								{
+									_x params[ "_item", "_itemCount" ];
+									if ( _item == _className ) exitWith {
+										if ( _itemCount - _count > 0 ) then {
+											_contentType set [ _forEachIndex, [ _item, _itemCount - _count ] ];
+										}else{
+											_contentType set [ _forEachIndex, objNull ];
+										};
+									};
+								}forEach _contentType;
+								_contentType = _contentType - [ objNull ];
+								_contents set [ _forEachIndex, _contentType ];
+							}forEach _contents;
+							_crateContents = [ _crateContents select 0, _contents select 0, _contents select 1, _contents select 2 ];
+						};
+					};
+				};
+				
+				[ "CACHE", [ "REM", [ _item, _count ] ] ] call NEB_fnc_showMessage;
+				profileNamespace setVariable [ "NEB_telecache", _crateContents ];
+				[ "LOAD" ] call NEB_fnc_shopCrate;
+				
+			};
+			
+		};
+	};
+	
 	//Called by server on missionEH HandleDisconnect
 	/*case "DISCONNECT" : {
 		params[ "_unit", "_id", "_uid", "_name" ];
