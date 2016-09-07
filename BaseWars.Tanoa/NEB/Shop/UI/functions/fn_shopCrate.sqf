@@ -357,7 +357,7 @@ switch ( _do ) do {
 					};
 				};
 				
-				[ "CACHE", [ "ADD", [ _item, _count ] ] ] call NEB_fnc_showMessage;
+				[ "CACHE", [ "ADD", [ _className, _count ] ] ] call NEB_fnc_showMessage;
 				
 			};
 			
@@ -406,7 +406,7 @@ switch ( _do ) do {
 					};
 				};
 				
-				[ "CACHE", [ "REM", [ _item, _count ] ] ] call NEB_fnc_showMessage;
+				[ "CACHE", [ "REM", [ _className, _count ] ] ] call NEB_fnc_showMessage;
 				profileNamespace setVariable [ "NEB_telecache", _crateContents ];
 				[ "LOAD" ] call NEB_fnc_shopCrate;
 				
