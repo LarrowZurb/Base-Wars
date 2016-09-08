@@ -13,8 +13,9 @@ NEB_MsgTickQueue = [];
 NEB_MsgTickNext = diag_tickTime;
 
 addMissionEventHandler [ "EachFrame", {
+
 	if ( count NEB_MsgTickQueue > 0 && { diag_tickTime > NEB_MsgTickNext } ) then {
-		
+
 		_layerInfo = {
 			_x params[ "_layer", "_active" ];
 			if !( _active ) exitWith {

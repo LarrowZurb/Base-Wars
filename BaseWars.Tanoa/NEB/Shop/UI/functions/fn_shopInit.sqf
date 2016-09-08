@@ -7,6 +7,7 @@
 // is mobile shop - BOOL - if true each client will monitor the trigger for movement and will update marker locations - DEFAULT false
 
 params[
+	[ "_sides", [ east, west ] ],
 	[ "_shopTrigger", objNull, [ objNull ] ],
 	[ "_shopName", "", [ "" ] ],
 	[ "_shops", "ALL", [ "", [] ] ],
@@ -23,34 +24,47 @@ if !( _createMarker isEqualType []  ) then {
 };
 _createMarker params[ [ "_mrkArea", true ], [ "_mrkText", true ] ];
 
-if ( isServer ) then {
+if ( playerSide in _sides ) then {
 	private[ "_mrk", "_mrkTxt" ];
 	
 	//Create unique marker name
-	private _mrkName = "";
-	while { true } do {
-		_mrkName = format[ "%1_%2", random 1, _shopName ];
-		if ( getMarkerPos _mrkName isEqualTo [0,0,0] ) exitWith {};
+	private _mrkName = format[ "shop_%1", random 1 ];
+	while { !( getMarkerPos _mrkName isEqualTo [ 0,0,0 ] ) } do {
+		_mrkName = format[ "shop_%1", random 1 ];
 	};
-
+	
 	//Create Area Marker
 	if ( _mrkArea ) then {
-		_mrk = [ _mrkName, _shopTrigger ] call BIS_fnc_markerToTrigger;
+		_mrk = createMarkerLocal [ _mrkName, getPos _shopTrigger ];
+		triggerArea _shopTrigger params[ "_a", "_b", "_angle", "_isRect" ];
+		_mrk setMarkerDirLocal _angle;
+		_mrk setMarkerSizeLocal [ _a, _b ];
+		_mrk setMarkerShapeLocal ( [ "ELLIPSE", "RECTANGLE" ] select _isRect );
 		_mrk setMarkerBrush "Border";
 	};
 
 	//Create Name marker
 	if ( _mrkText ) then {
-		_mrkTxt = createMarker [ format[ "%1_txt", _mrkName ], getPos _shopTrigger ];
-		_mrkTxt setMarkerShape "ICON";
-		_mrkTxt setMarkerType "hd_dot";
-		_mrkTxt setMarkerText format[ "%1 Shop", _shopName ];
+		_mrkTxt = createMarkerLocal [ format[ "shop_%1_txt", _mrkName ], getPos _shopTrigger ];
+		_mrkTxt setMarkerShapeLocal "ICON";
+		_mrkTxt setMarkerTypeLocal "hd_dot";
+		_mrkTxt setMarkerTextLocal format[ "%1 Shop", _shopName ];
 	};
 	
 	if ( _isMobile ) then {
 		
 		if ( isNil "NEB_shopMarkers" ) then {
 			NEB_shopMarkers = [];
+			
+			addMissionEventHandler [ "EachFrame", {
+				if ( !isNil "NEB_shopMarkers" && { visibleMap || visibleGPS } ) then {
+					{
+						_x params[ "_marker", "_trigger" ];
+						_pos = getPosATLVisual _trigger;
+						_marker setMarkerPosLocal _pos;
+					}forEach NEB_shopMarkers;
+				};
+			}];
 		};
 		
 		{
@@ -58,58 +72,41 @@ if ( isServer ) then {
 				NEB_shopMarkers pushBack [ call compile _x, _shopTrigger ];
 			};
 		}forEach [ "_mrk", "_mrkTxt" ];
-			
-		publicVariable "NEB_shopMarkers";
+
 	};
 	
-};
 
-if ( _shops isEqualType "" && { _shops == "ALL" } ) then {
-	_shops = NEB_availableShops;
-}else{
-	if !( _shops isEqualType [] ) then {
-		_shops = [ _shops ];
+	if ( _shops isEqualType "" && { _shops == "ALL" } ) then {
+		_shops = NEB_availableShops;
+	}else{
+		if !( _shops isEqualType [] ) then {
+			_shops = [ _shops ];
+		};
 	};
-};
 
-//Client or Host
-if ( !isDedicated && hasInterface  ) then {
+
+	waitUntil{ !isNull player };
 	
-	_thread = [ _shopTrigger, _shopName, _shops ] spawn {
-		params[ "_shopTrigger", "_shopName", "_shops" ];
-		
-		waitUntil{ !isNull player };
-		
-		_shopTrigger triggerAttachVehicle [ player ];
-		_shopTrigger setTriggerActivation [ "VEHICLE", "PRESENT", true ];
-		_shopTrigger setTriggerStatements [
-			"this",
-			format[ "
-				hint 'You have entered\n%1 shop';
-				player setvariable [ 'NEB_shopAction_%1',
-					player addAction [ 'Open %1 Shop', {
-							[ 'INIT', [ %2 ] ] call NEB_fnc_shop;
-						},
-						[],
-						10
-					]
-				];
-			", _shopName, _shops ],
-			format[ "
-				hint 'You have left\n%1 shop';
-				player removeAction ( player getvariable 'NEB_shopAction_%1' );
-				[ 'HIDE' ] call NEB_fnc_shopCrate;
-			", _shopName ]
-		];
-		
-		addMissionEventHandler [ "EachFrame", {
-			if ( !isNil "NEB_shopMarkers" && { visibleMap || visibleGPS } ) then {
-				{
-					_x params[ "_marker", "_trigger" ];
-					_pos = getPosATLVisual _trigger;
-					_marker setMarkerPosLocal _pos;
-				}forEach NEB_shopMarkers;
-			};
-		}];
-	};
+	_shopTrigger triggerAttachVehicle [ player ];
+	_shopTrigger setTriggerActivation [ "VEHICLE", "PRESENT", true ];
+	_shopTrigger setTriggerStatements [
+		"this",
+		format[ "
+			[ 'SHOP', [ 'ENTER', '%1' ] ] call NEB_fnc_showMessage;
+			player setvariable [ 'NEB_shopAction_%1',
+				player addAction [ 'Open %1 Shop', {
+						[ 'INIT', [ %2 ] ] call NEB_fnc_shop;
+					},
+					[],
+					10
+				]
+			];
+		", _shopName, _shops ],
+		format[ "
+			[ 'SHOP', [ 'LEAVE', '%1' ] ] call NEB_fnc_showMessage;
+			player removeAction ( player getvariable 'NEB_shopAction_%1' );
+			[ 'HIDE' ] call NEB_fnc_shopCrate;
+		", _shopName ]
+	];
+
 };

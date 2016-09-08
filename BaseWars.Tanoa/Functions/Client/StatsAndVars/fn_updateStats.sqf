@@ -68,7 +68,7 @@ player setVariable [ "level",		_newLevel ];
 NEB_statsUpdating = nil;
 
 {
-	if ( _x select 1 > 0 ) then {
+	if ( _x select 1 != 0 ) then {
 		_x call NEB_fnc_showMessage;
 	};
 }forEach[

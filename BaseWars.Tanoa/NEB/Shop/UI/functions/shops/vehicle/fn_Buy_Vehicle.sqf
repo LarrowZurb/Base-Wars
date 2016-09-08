@@ -16,9 +16,11 @@ if ( _emptyPos isEqualTo [] ) then {
 	clearWeaponCargoGlobal _veh;
 	clearMagazineCargoGlobal _veh;
 	clearItemCargoGlobal _veh;
+	clearBackpackCargoGlobal _veh;
+
+	[ "VEH", [ "ADD", _className ] ] call NEB_fnc_showMessage;
 	
 	player setDir (getDir _veh); //TODO: add personnal vehicle icons
-	
-	[ "VEH", [ "ADD", _className ] ] call NED_fnc_showMessage;
+
 	
 };

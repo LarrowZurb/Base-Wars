@@ -14,6 +14,7 @@ class NEB_BaseWars
 	{
 		file = "functions\Client";
 		class playerEHs {};
+		class setupShops {};
 	};
 	
 	class CashAndRewards

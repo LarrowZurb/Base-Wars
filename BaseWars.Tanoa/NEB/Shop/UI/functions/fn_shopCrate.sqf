@@ -69,6 +69,8 @@ switch ( _do ) do {
 			};
 		}];
 		
+		[ "HIDE" ] call NEB_fnc_shopCrate;
+		
 		_crate
 		
 	};
@@ -155,10 +157,12 @@ switch ( _do ) do {
 						_secMuzzleMag = [];
 					};
 					
+					//[ "CACHE", [ "ADD", [ _weapon call BIS_fnc_baseWeapon, 1 ] ] ] call NEB_fnc_shopCrate;
 					_crate addWeaponCargo [ ( _weapon call BIS_fnc_baseWeapon ), 1 ];
 					
 					{
 						if !( _x isEqualTo "" ) then {
+							//[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
 							_crate addItemCargo [ _x, 1 ];
 						};
 					}forEach [ _silencer, _pointer, _optic, _bipod ];
@@ -166,6 +170,7 @@ switch ( _do ) do {
 					{
 						if ( !isNil "_x" && { count _x > 0 } ) then {
 							_x params [ "_mag", "_ammo" ];
+							//[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
 							_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
 						};
 					}forEach [ _priMuzzleMag, _secMuzzleMag ];
@@ -182,6 +187,7 @@ switch ( _do ) do {
 					
 					{
 						{
+							//[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
 							_crate addItemCargo [ _x, 1 ];
 						}forEach _x;
 					}forEach [
@@ -191,6 +197,7 @@ switch ( _do ) do {
 					
 					{
 						_x params[ "_mag", "_ammo" ];
+						//[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
 						_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
 					}forEach magazinesAmmoCargo _container;
 					

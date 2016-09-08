@@ -16,19 +16,29 @@ if !( _currentWeapon isEqualTo "" ) then {
 	//Get current weapon attachments
 	_currentAttach = [ primaryWeaponItems player, secondaryWeaponItems player, handgunItems player ] select NEB_currentButton;
 					
-	//Get weapons compatible magazines
-	_cfg = configFile >> "CfgWeapons" >> _currentWeapon;
-	_compatibleMags = [];
-	{
-		if ( _x == "this" ) then {
-			_compatibleMags = _compatibleMags + getArray( _cfg >> "magazines" );
-		}else{
-			_compatibleMags = _compatibleMags + getArray( _cfg >> _x >> "magazines" );
-		};
-	}forEach getArray( _cfg >> "muzzles" );
-
-	//Get current magazines including ones in current weapon that are compatible with the weapon
-	_currentMags = magazinesAmmoFull player select { _x select 0 in _compatibleMags };
+	_fnc_getCompatMags = {
+		params[ "_weapon" ];
+		
+		//Get weapons compatible magazines
+		_cfg = configFile >> "CfgWeapons" >> _weapon;
+		
+		_compatibleMags = [];
+		{
+			if ( _x == "this" ) then {
+				_compatibleMags = _compatibleMags + getArray( _cfg >> "magazines" );
+			}else{
+				_compatibleMags = _compatibleMags + getArray( _cfg >> _x >> "magazines" );
+			};
+		}forEach getArray( _cfg >> "muzzles" );
+		
+		_compatibleMags
+	};
+	
+	_compatOld = _currentWeapon call _fnc_getCompatMags;
+	_compatNew = _className call _fnc_getCompatMags;
+	
+	//Get current magazines including ones in current weapon that are compatible with the current weapon but not new weapon
+	_currentMags = magazinesAmmoFull player select { _x select 0 in _compatOld && { !( _x select 0 in _compatNew ) } };
 	
 	//Add current weapon base type( we are going to add attachments seperately ) to crate
 	[ "CACHE", [ "ADD", [ [ _currentWeapon ] call BIS_fnc_baseWeapon, 1 ] ] ] call NEB_fnc_shopCrate;
@@ -36,6 +46,7 @@ if !( _currentWeapon isEqualTo "" ) then {
 	
 	{
 		_x params[ "_mag", "_ammo" ];
+		
 		//Add identical magazine to crate including ammo count
 		[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
 		//Remove mag from player
@@ -121,7 +132,9 @@ _slotClasses = [ "MuzzleSlot", "PointerSlot", "CowsSlot", "UnderBarrelSlot" ]; /
 		};
 		
 	}else{
-		[ "CACHE", [ "ADD", [ _oldAttach, 1 ] ] ] call NEB_fnc_shopCrate;
+		if ( _oldAttach != "" ) then {
+			[ "CACHE", [ "ADD", [ _oldAttach, 1 ] ] ] call NEB_fnc_shopCrate;
+		};
 	};
 }forEach _newAttachments;
 
