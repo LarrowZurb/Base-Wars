@@ -141,7 +141,7 @@ switch ( _do ) do {
 			//Disassemble Weapons
 			case "WEAPON" : {
 				_crate = [ "GET" ] call NEB_fnc_shopCrate;
-				params[ [ "_container", _crate ] ];
+				params[ [ "_container", _crate ], [ "_remote", false ] ];
 				
 				_weaponCargoDetails = weaponsItemsCargo _container;
 				clearWeaponCargoGlobal _container;
@@ -157,21 +157,31 @@ switch ( _do ) do {
 						_secMuzzleMag = [];
 					};
 					
-					//[ "CACHE", [ "ADD", [ _weapon call BIS_fnc_baseWeapon, 1 ] ] ] call NEB_fnc_shopCrate;
-					_crate addWeaponCargo [ ( _weapon call BIS_fnc_baseWeapon ), 1 ];
+					if ( _remote ) then {
+						[ "CACHE", [ "ADD", [ _weapon call BIS_fnc_baseWeapon, 1 ] ] ] call NEB_fnc_shopCrate;
+					}else{
+						_crate addWeaponCargo [ ( _weapon call BIS_fnc_baseWeapon ), 1 ];
+					};
 					
 					{
 						if !( _x isEqualTo "" ) then {
-							//[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
-							_crate addItemCargo [ _x, 1 ];
+							if ( _remote ) then {
+								[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
+							}else{
+								_crate addItemCargo [ _x, 1 ];
+							};
 						};
 					}forEach [ _silencer, _pointer, _optic, _bipod ];
 						
 					{
 						if ( !isNil "_x" && { count _x > 0 } ) then {
 							_x params [ "_mag", "_ammo" ];
-							//[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
-							_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+							
+							if ( _remote ) then {
+								[ "CACHE", [ "ADD", [ [ _mag, _ammo ], 1 ] ] ] call NEB_fnc_shopCrate;
+							}else{
+								_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+							};
 						};
 					}forEach [ _priMuzzleMag, _secMuzzleMag ];
 					
@@ -180,6 +190,8 @@ switch ( _do ) do {
 			
 			//Disassemble containers
 			case "CONTAINER" : {
+				params[ [ "_remote", false ] ];
+				
 				_crate = [ "GET" ] call NEB_fnc_shopCrate;
 				_containers = everyContainer _crate;
 				{
@@ -187,19 +199,30 @@ switch ( _do ) do {
 					
 					{
 						{
-							//[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
-							_crate addItemCargo [ _x, 1 ];
+							if ( _remote ) then {
+								[ "CACHE", [ "ADD", [ _x, 1 ] ] ] call NEB_fnc_shopCrate;
+							}else{
+								_crate addItemCargo [ _x, 1 ];
+							};
 						}forEach _x;
 					}forEach [
 						itemCargo _container,
 						backpackCargo _container
 					];
 					
+					_magazines = ( magazinesAmmoCargo _container apply{ _x select [ 0, 2 ] } ) call BIS_fnc_consolidateArray;
 					{
-						_x params[ "_mag", "_ammo" ];
-						//[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
-						_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
-					}forEach magazinesAmmoCargo _container;
+						_x params[ "_magInfo", "_count" ];
+						_magInfo params[ "_mag", "_ammo" ];
+						
+						if ( _remote ) then {
+							[ "CACHE", [ "ADD", [ [ _mag, _ammo ], _count ] ] ] call NEB_fnc_shopCrate;
+						}else{
+							for "_i" from 1 to _count do {
+								_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+							};
+						};
+					}forEach _magazines;
 					
 					[ "DIS", [ "WEAPON", _container ] ] call NEB_fnc_shopCrate;
 					
@@ -212,8 +235,10 @@ switch ( _do ) do {
 			
 			//Disassemble both weapons and containers
 			case "ALL" : {
-				[ "DIS", "WEAPON" ] call NEB_fnc_shopCrate;
-				[ "DIS", "CONTAINER" ] call NEB_fnc_shopCrate;
+				params[ [ "_remote", false ] ];
+				
+				[ "DIS", "WEAPON", [ "GET" ] call NEB_fnc_shopCrate, _remote ] call NEB_fnc_shopCrate;
+				[ "DIS", "CONTAINER", _remote ] call NEB_fnc_shopCrate;
 				
 				[ "SAVE" ] call NEB_fnc_shopCrate;
 			};
@@ -226,7 +251,7 @@ switch ( _do ) do {
 				objectFromNetId _crateID addEventHandler [ "ContainerClosed", {
 					params[ "_container", "_unit" ];
 												
-					[ "DIS", "ALL" ] remoteExec [ "NEB_fnc_shopCrate", _container ];
+					[ "DIS", "ALL", _container != [ "GET" ] call NEB_fnc_shopCrate ] remoteExec [ "NEB_fnc_shopCrate", _container ];
 					
 				}];
 			};
@@ -250,8 +275,10 @@ switch ( _do ) do {
 		    switch ( _forEachIndex ) do {
 		        case ( 0 ) : {
 		            {
-		            	_x params[ "_mag", "_ammo" ];
-		                _crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+		            	_x params[ "_info", "_count" ];
+		            	for "_i" from 1 to _count do {
+		            		_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
+			            };
 		            }forEach _x;
 		        };
 		        case ( 1 ) : {
@@ -282,7 +309,7 @@ switch ( _do ) do {
 		if !( isNull _crate ) then {
 			profileNamespace setVariable[ "NEB_telecache",
 				[
-					magazinesAmmoCargo _crate,
+					( magazinesAmmoCargo _crate apply{ _x select [ 0, 2 ] } ) call BIS_fnc_consolidateArray,
 					itemCargo _crate call BIS_fnc_consolidateArray,
 					weaponCargo _crate call BIS_fnc_consolidateArray,
 					backpackCargo _crate call BIS_fnc_consolidateArray
@@ -332,8 +359,21 @@ switch ( _do ) do {
 	//Add/Remove crate inventory
 	//********
 	case "CACHE" : {
+		private[ "_className", "_ammo" ];
 		params[ "_fnc", "_itemInfo" ];
-		_itemInfo params[ "_className", "_count", "_ammo" ];
+		_itemInfo params[ "_info", "_count" ];
+		
+		if ( _info isEqualType [] ) then {
+			_className = _info select 0;
+			_ammo = if ( count _info > 1 ) then {
+				_info select 1
+			}else{
+				-1
+			};
+		}else{
+			_className = _info;
+			_ammo = -1;
+		};
 		
 		switch ( toUpper _fnc ) do {
 			
@@ -347,7 +387,9 @@ switch ( _do ) do {
 						if ( _ammo isEqualTo -1 ) then {
 							_ammo = getNumber( configFile >> "CfgMagazines" >> _className >> "count" );
 						};
-						_crate addMagazineAmmoCargo [ _className, _count, _ammo ];
+						for "_i" from 1 to _count do {
+							_crate addMagazineAmmoCargo [ _className, _count, _ammo ];
+						};
 					};
 					case "WEAPON" : {
 						_crate addWeaponCargo [ _className, _count ];
@@ -364,7 +406,7 @@ switch ( _do ) do {
 					};
 				};
 				
-				[ "CACHE", [ "ADD", [ _className, _count ] ] ] call NEB_fnc_showMessage;
+				[ "CACHE", [ "ADD", [ _className, _count, _ammo ] ] ] call NEB_fnc_showMessage;
 				
 			};
 			
@@ -380,10 +422,15 @@ switch ( _do ) do {
 						case "MAGAZINE" : {
 							_contents = _crateContents select 0;
 							{
-								_x params[ "_mag", "_ammoCount" ];
+								_x params[ "_magInfo", "_numberOf" ];
+								_magInfo params[ "_mag", "_ammoCount" ];
 								
 								if ( _mag == _className && _ammoCount isEqualTo _ammo ) exitWith {
-									_contents set [ _forEachIndex, objNull ];
+									if ( _numberOf > 1 ) then {
+										_contents set [ _forEachIndex, [ [ _mag, _ammoCount ], _numberOf - 1 ] ];
+									}else{
+										_contents set [ _forEachIndex, objNull ];
+									};
 								};
 							}forEach _contents;
 							_contents = _contents - [ objNull ];

@@ -173,7 +173,7 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.0425 * safeZoneH;
 					w = 0.2425 * safeZoneW;
@@ -181,6 +181,7 @@ class NEB_Shop
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.0525 * safeZoneH;
 					w = 0.2325 * safeZoneW;
@@ -290,7 +291,7 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.0425 * safeZoneH;
 					w = 0.2425 * safeZoneW;
@@ -298,6 +299,7 @@ class NEB_Shop
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.0525 * safeZoneH;
 					w = 0.2325 * safeZoneW;
@@ -418,18 +420,19 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.0425 * safeZoneH;
 					w = 0.2425 * safeZoneW;
-					h = 0.34 * safeZoneH;
+					h = 0.3400 * safeZoneH;
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.0525 * safeZoneH;
 					w = 0.2325 * safeZoneW;
-					h = 0.32 * safeZoneH;
+					h = 0.3200 * safeZoneH;
 
 					class VScrollbar
 					{
@@ -562,7 +565,7 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.081 * safeZoneH;
 					w = 0.2425 * safeZoneW;
@@ -570,6 +573,7 @@ class NEB_Shop
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.091 * safeZoneH;
 					w = 0.2325 * safeZoneW;
@@ -717,7 +721,7 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.081 * safeZoneH;
 					w = 0.2425 * safeZoneW;
@@ -725,6 +729,7 @@ class NEB_Shop
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.091 * safeZoneH;
 					w = 0.2325 * safeZoneW;
@@ -883,7 +888,7 @@ class NEB_Shop
 				
 				class BckInfo: IGUIBack
 				{
-					idc = -1;
+					idc = BCK_INFO_IDC;
 					x = 0;
 					y = 0.081 * safeZoneH;
 					w = 0.2425 * safeZoneW;
@@ -891,6 +896,7 @@ class NEB_Shop
 				};
 				class InfoCtrlGrp : RscControlsGroup
 				{
+					idc = GRP_INFO_IDC;
 					x = 0.0055 * safeZoneW;
 					y = 0.091 * safeZoneH;
 					w = 0.2325 * safeZoneW;
@@ -938,6 +944,65 @@ class NEB_Shop
 				};
 			};
 		};
+		
+		class Quantity : RscControlsGroup
+		{
+			idc = GRP_QTY;
+			x = 0.5025 * safeZoneW + safeZoneX;
+			y = 0.6800 * safeZoneH + safeZoneY;
+			w = 0.2425 * safeZoneW;
+			h = 0.0200 * safeZoneH;
+
+			class VScrollbar
+			{
+				color[] = {1,1,1,0.25};
+				width = 0;
+				autoScrollEnabled = 1;
+			};
+			class HScrollbar
+			{
+				color[] = {1,1,1,1};
+				height = 0;
+			};
+			class ScrollBar
+			{
+				color[] = {1,1,1,0.6};
+				colorActive[] = {1,1,1,1};
+				colorDisabled[] = {1,1,1,0.3};
+				thumb = "#(argb,8,8,3)color(1,1,1,1)";
+				arrowEmpty = "#(argb,8,8,3)color(1,1,1,1)";
+				arrowFull = "#(argb,8,8,3)color(1,1,1,1)";
+				border = "#(argb,8,8,3)color(1,1,1,0)";
+			};
+			
+			class controls
+			{
+				
+				class ProgQty: RscProgress
+				{
+					idc = PROG_QTY_IDC;
+					x = 0.0125 * safeZoneW;
+					y = 0.0050 * safeZoneH;
+					w = 0.2000 * safeZoneW;
+					h = 0.0100 * safeZoneH;
+
+					//onButtonClick  = "[ 'MODE', 0 ] call NEB_fnc_Shop";
+
+				};
+				
+				class EditQty : RscEdit
+				{
+					idc = EDIT_QTY_IDC;
+					x = 0.2200 * safeZoneW;
+					y = 0. * safeZoneH;
+					w = 0.0150 * safeZoneW;
+					h = 0.0200 * safeZoneH;
+					
+					text = "1";
+				};
+				
+			};
+		}; 
 
 		class BtnCancel: RscShortcutButton
 		{

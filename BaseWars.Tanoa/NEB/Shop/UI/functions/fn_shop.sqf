@@ -68,6 +68,9 @@ switch ( toUpper _fnc ) do {
 		{
 			UICTRL( _x ) ctrlShow false;
 		}forEach ( SHOPLAYOUTS - [ _currentLayout ] );
+		//Hide quantity groupChat
+		UICTRL( GRP_QTY ) ctrlShow false;
+		NEB_quantityShown = false;
 			
 		//Make sure new layout is visible
 		UICTRL( _currentLayout ) ctrlShow true;
@@ -80,9 +83,10 @@ switch ( toUpper _fnc ) do {
 
 		//Set initial shop button
 		NEB_currentButton = 0;
+		[ "MODE", [ 0, true ] ] call NEB_fnc_shop;
 
 		//Update listbox
-		[ "LIST" ] call NEB_fnc_Shop;
+		//[ "LIST" ] call NEB_fnc_Shop;
 	};
 	
 	//******
@@ -107,14 +111,19 @@ switch ( toUpper _fnc ) do {
 	//Change shops current mode - e.g LAND, AIR, SEA etc
 	//******
 	case ( "MODE" ) : {
-		params[ "_button" ];
+		params[ "_button", [ "_force", false ] ];
 
 		//Dont do anything if we are already browsing the same button
-		if ( NEB_currentButton isEqualTo _button ) exitWith {};
+		if ( NEB_currentButton isEqualTo _button && !_force  ) exitWith {};
 
 		//Set shop current button
 		NEB_currentButton = _button;
-
+		
+//		if ( !isNil format[ "NEB_fnc_QTY_%1", NEB_currentShop ] ) then {
+//			//If a specialised mode script is available use it.
+//			[] call ( missionNamespace getVariable format[ "NEB_fnc_QTY_%1", NEB_currentShop ] );			
+//		};
+		
 		//Update listbox
 		[ "LIST" ] call NEB_fnc_Shop;
 
@@ -203,8 +212,14 @@ switch ( toUpper _fnc ) do {
 
 		if ( _index isEqualTo -1 ) exitWith {};
 
-		( call compile ( _ctrl lbData _index )) params[ "_className", "_level" ];
+		( call compile ( _ctrl lbData _index )) params[ "_className", "_level", [ "_count", 1 ] ];
 		_cost = _ctrl lbValue _index;
+		
+//TODO : This realy needs to be in INFO script
+		if ( !isNil format[ "NEB_fnc_QTY_%1", NEB_currentShop ] ) then {
+			//If a specialised quantity script is available use it.
+			[ _count ] call ( missionNamespace getVariable format[ "NEB_fnc_QTY_%1", NEB_currentShop ] );			
+		};
 
 		_buyButton = UICTRL( BTN_BUY_IDC );
 
@@ -223,7 +238,7 @@ switch ( toUpper _fnc ) do {
 			};
 		};
 
-		[ _className ] call ( missionNamespace getVariable format[ "NEB_fnc_Info_%1", NEB_currentShop ] );
+		[ _className, _cost, _level, _count ] call ( missionNamespace getVariable format[ "NEB_fnc_Info_%1", NEB_currentShop ] );
 
 	};
 
@@ -237,13 +252,73 @@ switch ( toUpper _fnc ) do {
 
 		_index =  lbCurSel _listbox;
 		
-		( call compile ( _listbox lbData _index )) params[ "_className", "_level" ];
+		( call compile ( _listbox lbData _index )) params[ "_className", "_level", [ "_count", 1 ] ];
 		_cost = _listbox lbValue _index;
 		
 		if !( isNil "_className" ) then {
-			[ _className, _cost, _level ] call ( missionNamespace getVariable format[ "NEB_fnc_Buy_%1", NEB_currentShop ] );
+			[ _className, _cost, _level, _count ] call ( missionNamespace getVariable format[ "NEB_fnc_Buy_%1", NEB_currentShop ] );
 		};
 
+	};
+	
+	//******
+	//Handle buying of selected item
+	//******
+	case ( "QTY" ) : {
+		params[ "_fnc" ];
+		
+		//Get button grp
+		_buttonLayout = UICTRL( ( SHOPLAYOUTS select NEB_shopButtons ) );
+		//get groups back
+		_back = UICTRL( BCK_INFO_IDC );
+		//get groups info grp
+		_info = UICTRL( GRP_INFO_IDC );
+
+		switch ( toUpper _fnc ) do {
+			
+			case ( "SHOW" ) :{
+				
+				if !( NEB_quantityShown ) then {
+
+					//-350 off of all heights
+					{
+						_pos = ctrlPosition _x;
+						_pos set [ 3, ( _pos select 3 ) - 0.0350 ];
+						_x ctrlSetPosition _pos;
+						_x ctrlCommit 0.2;
+					}forEach [ _buttonLayout, _back, _info ];
+					
+					//uiSleep 1;
+					
+					//Hide quantity groupChat
+					UICTRL( GRP_QTY ) ctrlShow true;
+					
+					NEB_quantityShown = true;
+				};
+			};
+			
+			case ( "HIDE" ) :{
+				
+				if ( NEB_quantityShown ) then {
+
+					//+350 on of all heights
+					{
+						_pos = ctrlPosition _x;
+						_pos set [ 3, ( _pos select 3 ) + 0.0350 ];
+						_x ctrlSetPosition _pos;
+						_x ctrlCommit 0.2;
+					}forEach [ _buttonLayout, _back, _info ];
+					
+					//uiSleep 1;
+					
+					//Hide quantity groupChat
+					UICTRL( GRP_QTY ) ctrlShow false;
+					
+					NEB_quantityShown = false;
+				};
+			};
+		};
+		
 	};
 
 };

@@ -27,10 +27,14 @@
 #define BTN_THREE_IDC		1073
 #define BTN_FOUR_IDC		1074
 #define BTN_FIVE_IDC		1075
+#define BCK_INFO_IDC		1076
+#define GRP_INFO_IDC		1078
 
 #define STXT_INFO_IDC		1080	//Info box is included in layouts as it need to resize when button second row is active
 
-
+#define GRP_QTY				114
+#define PROG_QTY_IDC		1141
+#define	EDIT_QTY_IDC		1142
 
 
 

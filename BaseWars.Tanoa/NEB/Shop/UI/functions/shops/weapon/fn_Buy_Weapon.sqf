@@ -48,7 +48,7 @@ if !( _currentWeapon isEqualTo "" ) then {
 		_x params[ "_mag", "_ammo" ];
 		
 		//Add identical magazine to crate including ammo count
-		[ "CACHE", [ "ADD", [ _mag, 1, _ammo ] ] ] call NEB_fnc_shopCrate;
+		[ "CACHE", [ "ADD", [ [ _mag, _ammo ], 1 ] ] ] call NEB_fnc_shopCrate;
 		//Remove mag from player
 		player removeMagazine _mag;
 	}forEach _currentMags;
@@ -59,16 +59,15 @@ if !( _currentWeapon isEqualTo "" ) then {
 _fnc_addmags = {
 	params[ "_mag", "_count" ];
 	
-	for "_i" from 1 to _count do {
-		if ( player canAdd _mag ) then {
-			//add one magazine
-			player addMagazine _mag;
-		}else{
-			//else add it to crate
-			[ "CACHE", [ "ADD", [ _mag, 1 ] ] ] call NEB_fnc_shopCrate;
-			[ "SHOW" ] call NEB_fnc_shopCrate;
-		};
-		
+	_left = for "_i" from 1 to _count do {
+		if !( player canAdd _mag ) exitWith { _count - ( _i -1 ) };
+		//add one magazine
+		player addMagazine _mag;		
+	};
+	if !( isNil "_left" ) then {
+		//else add it to crate
+		[ "CACHE", [ "ADD", [ [ _mag, -1 ], _left ] ] ] call NEB_fnc_shopCrate;
+		[ "SHOW" ] call NEB_fnc_shopCrate;
 	};
 
 };

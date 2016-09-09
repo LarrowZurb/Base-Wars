@@ -2,7 +2,7 @@
 params[ "_listbox", "_buyButton", "_data" ];
 
 {
-	_x params[ "_className", "_price", "_ammo" ];
+	_x params[ "_className", "_price", "_ammo", "_count" ];
 
 	_cfg = {
 		if ( isClass ( configFile >> _x >> _className ) ) exitWith {
@@ -24,9 +24,9 @@ params[ "_listbox", "_buyButton", "_data" ];
 		""
 	};
 
-	_index = _listbox lbAdd format[ "%1 - %2 $%3", getText( _cfg >> "displayName" ), _ammoDisplay, _price ];
+	_index = _listbox lbAdd format[ "%1 x %2 - %3 $%4 each", _count, getText( _cfg >> "displayName" ), _ammoDisplay, _price ];
 	_listbox lbSetPicture [ _index, getText( _cfg >> "picture" ) ];
-	_listbox lbSetData [ _index, str [ _className, _ammo ] ];
+	_listbox lbSetData [ _index, str [ _className, _ammo, _count ] ];
 	_listbox lbSetValue [ _index, _price ];
 
 	//Turn listbox entry red for testing as price is 0 meaning no shop data for class is found
