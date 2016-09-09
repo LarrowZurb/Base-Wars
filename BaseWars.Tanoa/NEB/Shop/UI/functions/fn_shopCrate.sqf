@@ -276,6 +276,7 @@ switch ( _do ) do {
 		        case ( 0 ) : {
 		            {
 		            	_x params[ "_info", "_count" ];
+		            	_info params[ "_mag", "_ammo" ];
 		            	for "_i" from 1 to _count do {
 		            		_crate addMagazineAmmoCargo [ _mag, 1, _ammo ];
 			            };
